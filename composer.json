@@ -1,0 +1,28 @@
+{
+    "name": "tinyframework/core",
+    "type": "framework",
+    "keywords": [
+        "php",
+        "framework"
+    ],
+    "description": "Core application / extension loader for Tiny PHP Web",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Faheem Anis",
+            "email": "faheem@cartzlink.com",
+            "homepage": "https://faheemanis.rf.gd/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "tinyframework/contracts": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "framework\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
