@@ -3,7 +3,7 @@
 namespace framework\web\components;
 
 use framework\utils\FileLogger;
-use framework\web\Component;
+use framework\Component;
 
 class Logger extends Component
 {

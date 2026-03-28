@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\web;
+namespace framework;
 
 use framework\contracts\ComponentInterface;
 

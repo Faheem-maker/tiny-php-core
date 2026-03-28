@@ -1,9 +1,9 @@
 <?php
 
-namespace framework\web\components;
+namespace framework\components;
 
 use framework\utils\ConfigContainer;
-use framework\web\Component;
+use framework\Component;
 
 /**
  * Application configuration container

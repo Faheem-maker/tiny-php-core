@@ -1,8 +1,8 @@
 <?php
 
-namespace framework\web\components;
+namespace framework\components;
 
-use framework\web\Component;
+use framework\Component;
 
 /**
  * Class PathManager
