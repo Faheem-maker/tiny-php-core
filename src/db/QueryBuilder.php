@@ -7,7 +7,7 @@ use framework\db\commands\InsertCommand;
 use framework\db\commands\SelectCommand;
 use framework\db\commands\UpdateCommand;
 use framework\db\drivers\BaseDriver;
-use framework\web\Component;
+use framework\Component;
 
 class QueryBuilder extends Component
 {
