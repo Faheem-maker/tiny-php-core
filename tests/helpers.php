@@ -1,0 +1,62 @@
+<?php
+
+use framework\components\Config;
+use framework\tests\TestApplication;
+use framework\tests\TestDependencyContainer;
+
+function createApp(array $config = []) {
+    $base_config = [
+        'paths' => [
+            'base_dir' => __DIR__,
+        ]
+    ];
+
+    $base_config = array_merge_recursive($base_config, $config);
+
+    $app = TestApplication::getInstance();
+
+    $app->registerComponent('config', new Config());
+    $app->registerComponent('di', new TestDependencyContainer());
+
+    foreach ($base_config as $key => $value) {
+        $app->config->set($key, $value);
+    }
+
+    $app->init();
+
+    return $app;
+}
+
+function app()
+{
+    return TestApplication::getInstance();
+}
+
+/**
+ * @return framework\db\QueryBuilder|null
+ */
+function db()
+{
+    return app()->db;
+}
+
+function config($key = null, $default = null)
+{
+    if ($key === null) {
+        return app()->config;
+    }
+
+    return app()->config->get($key, $default);
+}
+
+function env($key, $default = null)
+{
+    if ($key === null) {
+        return $_ENV;
+    }
+    return $_ENV[$key] ?? $default;
+}
+
+function logs() {
+    return app()->logger;
+}
