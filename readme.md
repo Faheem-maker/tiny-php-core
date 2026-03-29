@@ -34,8 +34,8 @@ In a world of over-engineered solutions, Tiny PHP focuses on the essentials. It 
 You can create a new Tiny PHP by cloning it via git:
 
 ```bash
-git clone https://github.com/Faheem-maker/tiny-php.git
-cd tiny-php
+composer create-project tinyframework/tiny my-app
+cd my-app
 php -S localhost:8000
 ```
 
