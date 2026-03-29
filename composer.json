@@ -24,5 +24,11 @@
             "framework\\": "src/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": "11.5.x-dev"
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
 }
