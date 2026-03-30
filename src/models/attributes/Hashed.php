@@ -3,7 +3,7 @@
 namespace framework\models\attributes;
 
 use Attribute;
-use framework\interfaces\models\BeforeSave;
+use framework\models\interfaces\BeforeSave;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Hashed implements BeforeSave
