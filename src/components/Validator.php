@@ -3,8 +3,8 @@
 namespace framework\components;
 
 use framework\Component;
-use framework\web\models\attributes\Email;
-use framework\web\models\attributes\Required;
+use framework\models\attributes\Email;
+use framework\models\attributes\Required;
 
 class Validator extends Component
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\web\models;
+namespace framework\models;
 
 class Model
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace framework\web\models\attributes;
+namespace framework\models\attributes;
 
 use Attribute;
 use framework\contracts\Validator;

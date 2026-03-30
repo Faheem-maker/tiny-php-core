@@ -4,19 +4,19 @@ namespace framework\db;
 
 use framework\db\commands\DeleteCommand;
 use framework\db\commands\SelectCommand;
-use framework\web\interfaces\models\BeforeSave;
-use framework\web\models\attributes\PrimaryKey;
-use framework\web\models\Model;
+use framework\interfaces\models\BeforeSave;
+use framework\models\attributes\PrimaryKey;
+use framework\models\Model;
 
-class ActiveModel extends Model {
+class ActiveModel extends Model
+{
     protected $relations = [];
 
     public function &__get($name)
     {
         if (!empty($this->relations[$name])) {
             return $this->relations[$name]['records'];
-        }
-        else if (method_exists($this, 'get_' . $name)) {
+        } else if (method_exists($this, 'get_' . $name)) {
             $method = 'get_' . $name;
             $relation = $this->$method();
 
@@ -40,17 +40,18 @@ class ActiveModel extends Model {
                 'records' => $value,
                 'relation' => $relation
             ];
-        }
-        else if ($this->relations[$name]) {
+        } else if ($this->relations[$name]) {
             $this->relations[$name]['records'] = $value;
         }
     }
 
-    public static function table() {
+    public static function table()
+    {
         return strtolower((new \ReflectionClass(static::class))->getShortName()) . 's';
     }
 
-    public static function primaryKey() {
+    public static function primaryKey()
+    {
         $data = static::getMetaData();
 
         foreach ($data as $prop => $meta) {
@@ -64,7 +65,8 @@ class ActiveModel extends Model {
         return null;
     }
 
-    public static function find($value, $column = null) {
+    public static function find($value, $column = null)
+    {
         if (empty($column)) {
             $column = static::primaryKey();
         }
@@ -76,7 +78,8 @@ class ActiveModel extends Model {
         return self::from($query->first());
     }
 
-    public static function all($columns = null) {
+    public static function all($columns = null)
+    {
         if (empty($columns)) {
             $columns = static::columns();
         }
@@ -86,20 +89,22 @@ class ActiveModel extends Model {
         return array_map([static::class, 'from'], $query->all());
     }
 
-    public static function select($columns = null) {
+    public static function select($columns = null)
+    {
         if (empty($columns)) {
             $columns = static::columns();
         }
         $query = new SelectCommand(db()->conn(), $columns);
         $query->from(static::table());
-        $query->transform = function($data) {
+        $query->transform = function ($data) {
             return static::from($data);
         };
 
         return $query;
     }
 
-    public function delete() {
+    public function delete()
+    {
         $query = new DeleteCommand(db()->conn(), $this->table());
         $id = $this->primaryKey();
         $query->where($id, $this->$id);
@@ -107,7 +112,8 @@ class ActiveModel extends Model {
         $this->$id = 0;
     }
 
-    public function attributes() {
+    public function attributes()
+    {
         $meta = static::getMetaData();
         $data = [];
 
@@ -120,7 +126,8 @@ class ActiveModel extends Model {
         return $data;
     }
 
-    public function save($recursive = false) {
+    public function save($recursive = false)
+    {
         $data = $this->attributes();
 
         // Run before save
@@ -159,7 +166,8 @@ class ActiveModel extends Model {
         }
     }
 
-    protected static function columns() {
+    protected static function columns()
+    {
         $meta = static::getMetaData();
         $columns = [];
 
@@ -173,7 +181,8 @@ class ActiveModel extends Model {
     /**
      * Relationships
      */
-    public function belongsTo($model, $self_key = null, $foreign_key = null) {
+    public function belongsTo($model, $self_key = null, $foreign_key = null)
+    {
         if (empty($foreign_key)) {
             $foreign_key = $model::primaryKey();
         }
@@ -190,7 +199,8 @@ class ActiveModel extends Model {
         );
     }
 
-    public function hasOne($model, $foreign_key = null, $self_key = null) {
+    public function hasOne($model, $foreign_key = null, $self_key = null)
+    {
         if (empty($self_key)) {
             $self_key = $this->primaryKey();
         }
@@ -207,7 +217,8 @@ class ActiveModel extends Model {
         );
     }
 
-    public function hasMany($model, $foreign_key = null, $self_key = null) {
+    public function hasMany($model, $foreign_key = null, $self_key = null)
+    {
         if (empty($self_key)) {
             $self_key = $this->primaryKey();
         }
