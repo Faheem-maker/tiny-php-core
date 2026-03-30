@@ -35,7 +35,7 @@ class PathManager extends Component
      * 
      * Handles the following cases:
      * <ul>
-     * <li>path/to -> Normalizes and returns as is<li>
+     * <li>path/to -> Normalizes and returns as is</li>
      * <li>/path/to (with a trailing slash) -> Returns the absolute path from application's root</li>
      * <li>@assets/path/to -> Returns the aboslute path calculated from assets folder</li>
      * </ul>
