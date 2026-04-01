@@ -9,6 +9,7 @@ function createApp(array $config = [])
     $base_config = [
         'paths' => [
             'base_dir' => __DIR__,
+            'root' => __DIR__,
             'runtime' => __DIR__ . '/runtime'
         ],
         'TEST_KEY' => 'tests',
