@@ -15,5 +15,6 @@ class PathTest extends TestCase
         $this->assertEquals(realpath(__DIR__ . '/../runtime/logs'), $app->path->resolve('@runtime/logs'));
         $this->assertEquals(realpath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit'));
         $this->assertEquals(realpath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit/'));
+        $this->assertEquals('runtime/logs/assets', $app->path->resolve('runtime//logs/assets/'));
     }
 }
