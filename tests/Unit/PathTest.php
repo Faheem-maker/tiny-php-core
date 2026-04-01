@@ -60,6 +60,14 @@ class PathTest extends TestCase
         $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime'), $app->path->root('runtime'));
     }
 
+    public function testApp()
+    {
+        $app = createApp();
+
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app'), $app->path->app());
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/runtime'), $app->path->app('runtime'));
+    }
+
     public function testConfig()
     {
         $app = createApp();
