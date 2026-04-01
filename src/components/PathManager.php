@@ -204,7 +204,7 @@ class PathManager extends Component
      * @param string $path
      * @return string
      */
-    protected function normalize(string $path): string
+    public function normalize(string $path): string
     {
         if ($path === '') {
             return '';

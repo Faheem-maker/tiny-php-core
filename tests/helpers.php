@@ -1,6 +1,7 @@
 <?php
 
 use framework\components\Config;
+use framework\components\PathManager;
 use framework\tests\TestApplication;
 use framework\tests\TestDependencyContainer;
 
@@ -21,6 +22,7 @@ function createApp(array $config = [])
     $app = TestApplication::getInstance();
 
     $app->registerComponent('config', new Config());
+    $app->registerComponent('path', new PathManager());
     $app->registerComponent('di', new TestDependencyContainer());
 
     foreach ($base_config as $key => $value) {

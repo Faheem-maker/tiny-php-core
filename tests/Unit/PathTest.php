@@ -25,15 +25,32 @@ class PathTest extends TestCase
     {
         $app = createApp();
 
-        define('DS', DIRECTORY_SEPARATOR);
-
         $this->assertEquals($this->resolvePath(__DIR__ . '/../'), $app->path->resolve('@root'));
-        $this->assertEquals($this->resolvePath(__DIR__ . '/../'), $app->path->resolve('@root/'));
         $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime'), $app->path->resolve('@runtime/'));
         $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime/logs'), $app->path->resolve('@runtime/logs'));
         $this->assertEquals($this->resolvePath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit'));
-        $this->assertEquals($this->resolvePath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit/'));
-        $this->assertEquals('runtime' . DS . 'logs' . DS . 'assets', $app->path->resolve('runtime//logs/assets/'));
+        $this->assertEquals('home', $app->path->resolve('logs/../home'));
+    }
+
+    public function testNormalize()
+    {
+        $app = createApp();
+
+        // 1. Basic normalization
+        $this->assertEquals($this->resolvePath('path/to/dir'), $app->path->normalize('path/to/dir/'));
+        $this->assertEquals($this->resolvePath('path/to/dir'), $app->path->normalize('path//to//dir'));
+
+        // 2. Relative segments
+        $this->assertEquals($this->resolvePath('path/to/../dir'), $app->path->normalize('path/to/../dir'));
+        $this->assertEquals($this->resolvePath('path/to'), $app->path->normalize('path/to/./'));
+        $this->assertEquals('..' . DIRECTORY_SEPARATOR . 'file', $app->path->normalize('../file'));
+
+        // 3. Absolute paths
+        $this->assertEquals($this->resolvePath('/path/to'), $app->path->normalize('/path/to/'));
+        $this->assertEquals($this->resolvePath('C:/path/to'), $app->path->normalize('C:\\path/to/'));
+
+        // 4. Edge Case (No Errors)
+        $this->assertEquals('', $app->path->normalize(''));
     }
 
     public function testResolveWithDefault()
@@ -98,5 +115,17 @@ class PathTest extends TestCase
 
         $this->assertEquals($this->resolvePath(__DIR__ . '/../app/resources'), $app->path->resources());
         $this->assertEquals($this->resolvePath(__DIR__ . '/../app/resources/tmp'), $app->path->resources('tmp'));
+    }
+
+    public function testExists()
+    {
+        $app = createApp();
+
+        $this->assertTrue($app->path->exists('@root/Unit'));
+        $this->assertFalse($app->path->exists('@root/NonExistent'));
+
+        // Test files
+        $this->assertTrue($app->path->exists('@root/Unit/PathTest.php'));
+        $this->assertFalse($app->path->exists('@root/Unit/NonExistent.php'));
     }
 }
