@@ -35,4 +35,12 @@ class PathTest extends TestCase
         $this->assertEquals('views/home/index', $app->path->replaceDots('views.home.index'));
         $this->assertEquals('views/home/index.html.php', $app->path->replaceDots('views.home.index\.html\.php'));
     }
+
+    public function testRoot()
+    {
+        $app = createApp();
+
+        $this->assertEquals(realpath(__DIR__ . '/../'), $app->path->root());
+        $this->assertEquals(realpath(__DIR__ . '/../runtime'), $app->path->root('runtime'));
+    }
 }
