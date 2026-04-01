@@ -10,7 +10,8 @@ function createApp(array $config = [])
         'paths' => [
             'base_dir' => __DIR__,
             'root' => __DIR__,
-            'runtime' => __DIR__ . '/runtime'
+            'runtime' => __DIR__ . '/runtime',
+            'assets' => __DIR__ . '/app/resources',
         ],
         'TEST_KEY' => 'tests',
     ];

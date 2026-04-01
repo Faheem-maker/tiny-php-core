@@ -5,18 +5,34 @@ use PHPUnit\Framework\TestCase;
 
 class PathTest extends TestCase
 {
+    private function resolvePath($path)
+    {
+        $path = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+        $segments = explode(DIRECTORY_SEPARATOR, $path);
+        $result = [];
+        foreach ($segments as $segment) {
+            if ($segment === '..') {
+                array_pop($result);
+            } elseif ($segment !== '.' && $segment !== '') {
+                $result[] = $segment;
+            }
+        }
+        $prefix = (strpos($path, DIRECTORY_SEPARATOR) === 0) ? DIRECTORY_SEPARATOR : '';
+        return $prefix . implode(DIRECTORY_SEPARATOR, $result);
+    }
+
     public function testResolve()
     {
         $app = createApp();
 
         define('DS', DIRECTORY_SEPARATOR);
 
-        $this->assertEquals(realpath(__DIR__ . '/../'), $app->path->resolve('@root'));
-        $this->assertEquals(realpath(__DIR__ . '/../'), $app->path->resolve('@root/'));
-        $this->assertEquals(realpath(__DIR__ . '/../runtime'), $app->path->resolve('@runtime/'));
-        $this->assertEquals(realpath(__DIR__ . '/../runtime/logs'), $app->path->resolve('@runtime/logs'));
-        $this->assertEquals(realpath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit'));
-        $this->assertEquals(realpath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit/'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../'), $app->path->resolve('@root'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../'), $app->path->resolve('@root/'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime'), $app->path->resolve('@runtime/'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime/logs'), $app->path->resolve('@runtime/logs'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../Unit'), $app->path->resolve('/Unit/'));
         $this->assertEquals('runtime' . DS . 'logs' . DS . 'assets', $app->path->resolve('runtime//logs/assets/'));
     }
 
@@ -24,8 +40,8 @@ class PathTest extends TestCase
     {
         $app = createApp();
 
-        $this->assertEquals(realpath(__DIR__ . '/../Unit'), $app->path->resolveWithDefault('Unit', '@root'));
-        $this->assertEquals(realpath(__DIR__ . '/../runtime/logs'), $app->path->resolveWithDefault('@runtime/logs', '@root'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../Unit'), $app->path->resolveWithDefault('Unit', '@root'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime/logs'), $app->path->resolveWithDefault('@runtime/logs', '@root'));
     }
 
     public function testReplaceDots()
@@ -40,7 +56,39 @@ class PathTest extends TestCase
     {
         $app = createApp();
 
-        $this->assertEquals(realpath(__DIR__ . '/../'), $app->path->root());
-        $this->assertEquals(realpath(__DIR__ . '/../runtime'), $app->path->root('runtime'));
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../'), $app->path->root());
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../runtime'), $app->path->root('runtime'));
+    }
+
+    public function testConfig()
+    {
+        $app = createApp();
+
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/config'), $app->path->config());
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/config/tmp'), $app->path->config('tmp'));
+    }
+
+    public function testPublic()
+    {
+        $app = createApp();
+
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../public'), $app->path->public());
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../public/assets'), $app->path->public('assets'));
+    }
+
+    public function testStorage()
+    {
+        $app = createApp();
+
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/storage'), $app->path->storage());
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/storage/tmp'), $app->path->storage('tmp'));
+    }
+
+    public function testResources()
+    {
+        $app = createApp();
+
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/resources'), $app->path->resources());
+        $this->assertEquals($this->resolvePath(__DIR__ . '/../app/resources/tmp'), $app->path->resources('tmp'));
     }
 }
