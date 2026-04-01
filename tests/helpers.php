@@ -4,11 +4,13 @@ use framework\components\Config;
 use framework\tests\TestApplication;
 use framework\tests\TestDependencyContainer;
 
-function createApp(array $config = []) {
+function createApp(array $config = [])
+{
     $base_config = [
         'paths' => [
             'base_dir' => __DIR__,
-        ]
+        ],
+        'TEST_KEY' => 'tests',
     ];
 
     $base_config = array_merge_recursive($base_config, $config);
@@ -57,6 +59,7 @@ function env($key, $default = null)
     return $_ENV[$key] ?? $default;
 }
 
-function logs() {
+function logs()
+{
     return app()->logger;
 }
