@@ -40,7 +40,13 @@ class PathManager extends Component
      * <li>@assets/path/to -> Returns the aboslute path calculated from assets folder</li>
      * </ul>
      * 
-     * * @param string $path The path to resolve.
+     * Notes:
+     * <ol>
+     *  <li>It removes any trailing slashes that the path might have</li>
+     *  <li>It replaces a blank "/" with the root path (without trailing slash)</li>
+     * </ol>
+     * 
+     * @param string $path The path to resolve.
      * @return string The fully resolved and normalized path.
      */
     public function resolve(string $path): string
@@ -50,9 +56,15 @@ class PathManager extends Component
             // Find the first slash to separate the tag from the rest of the path
             $slashPos = strpos($path, '/');
 
+            if (empty($slashPos)) {
+                $dirKey = substr($path, 1);
+                return $this->normalize(config("paths.{$dirKey}"));
+            }
+
             // Extract the directory key (e.g., "assets") and the remaining path
             $dirKey = substr($path, 1, $slashPos - 1);
             $remainingPath = substr($path, $slashPos + 1);
+
 
             // Fetch the base directory for this tag from config
             $dirBase = config("paths.{$dirKey}") ?? '';
@@ -192,7 +204,7 @@ class PathManager extends Component
      * @param string $path
      * @return string
      */
-    protected function normalize(string $path): string
+    public function normalize(string $path): string
     {
         if ($path === '') {
             return '';

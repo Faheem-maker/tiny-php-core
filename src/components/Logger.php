@@ -1,13 +1,13 @@
 <?php
 
-namespace framework\web\components;
+namespace framework\components;
 
 use framework\utils\FileLogger;
 use framework\Component;
 
 class Logger extends Component
 {
-    protected $logger;
+    public $logger;
 
     public function init(): void
     {

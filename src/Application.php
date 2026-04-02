@@ -6,6 +6,14 @@ use framework\contracts\ApplicationInterface;
 use framework\contracts\ComponentInterface;
 use framework\contracts\ExtensionInterface;
 
+/**
+ * Base application class
+ * 
+ * @property-read \framework\components\Config $config
+ * @property-read \framework\components\PathManager $path
+ * @property-read \framework\components\Logger $logger
+ * @property-read \framework\components\Validator $validator
+ */
 abstract class Application implements ApplicationInterface
 {
     protected static ?Application $instance = null;

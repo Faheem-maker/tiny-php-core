@@ -36,4 +36,13 @@ class ConfigTest extends TestCase
 
         $this->assertEquals('new_tests', config('paths.base_dir'));
     }
+
+    public function testGetter()
+    {
+        $app = createApp();
+
+        $app->config->test = 'test';
+
+        $this->assertEquals('test', $app->config->test);
+    }
 }
