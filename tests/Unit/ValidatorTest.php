@@ -56,4 +56,21 @@ class ValidatorTest extends TestCase
             'email' => 'required|email',
         ]));
     }
+
+    public function testValidatorInstance()
+    {
+        $app = createApp();
+
+        $this->assertEmpty($app->validator->validate((object) [
+            'email' => 'abc@gmail.com',
+        ], [
+            'email' => [new Required(), new Email()],
+        ]));
+
+        $this->assertEquals(['email' => 'custom error message'], $app->validator->validate((object) [
+            'email' => 'invalid-email',
+        ], [
+            'email' => [new Required(), new Email('custom error message')],
+        ]));
+    }
 }
