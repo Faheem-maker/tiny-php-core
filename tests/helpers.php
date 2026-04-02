@@ -2,6 +2,7 @@
 
 use framework\components\Config;
 use framework\components\PathManager;
+use framework\components\Validator;
 use framework\tests\TestApplication;
 use framework\tests\TestDependencyContainer;
 
@@ -24,6 +25,7 @@ function createApp(array $config = [])
     $app->registerComponent('config', new Config());
     $app->registerComponent('path', new PathManager());
     $app->registerComponent('di', new TestDependencyContainer());
+    $app->registerComponent('validator', new Validator());
 
     foreach ($base_config as $key => $value) {
         $app->config->set($key, $value);
