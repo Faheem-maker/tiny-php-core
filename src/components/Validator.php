@@ -40,9 +40,6 @@ class Validator extends Component
 
         $errors = [];
         foreach ($rules as $field => $validators) {
-            if (is_string($validators)) {
-                $validators = explode('|', $validators);
-            }
             foreach ($validators as $validator) {
                 if (is_callable($validator)) {
                     $result = $validator($data->$field ?? null);

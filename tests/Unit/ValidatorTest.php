@@ -32,5 +32,28 @@ class ValidatorTest extends TestCase
         ], [
             'name' => 'custom',
         ]));
+
+        $this->assertNotEmpty($app->validator->validate((object) [
+            'name' => 'invalid',
+        ], [
+            'name' => 'custom',
+        ]));
+    }
+
+    public function testDelimeter()
+    {
+        $app = createApp();
+
+        $this->assertEmpty($app->validator->validate((object) [
+            'email' => 'abc@gmail.com',
+        ], [
+            'email' => 'required|email',
+        ]));
+
+        $this->assertNotEmpty($app->validator->validate((object) [
+            'email' => 'invalid-email',
+        ], [
+            'email' => 'required|email',
+        ]));
     }
 }
