@@ -25,20 +25,38 @@ class Validator extends Component
 
     public function validate($data, $rules)
     {
+        // Resolve registry
+        foreach ($rules as $field => $validators) {
+            if (is_string($validators)) {
+                $validators = explode('|', $validators);
+                $rules[$field] = $validators;
+            }
+            foreach ($validators as $key => $validator) {
+                if (is_string($validator) && isset($this->registry[$validator])) {
+                    $rules[$field][$key] = $this->registry[$validator];
+                }
+            }
+        }
+
         $errors = [];
         foreach ($rules as $field => $validators) {
             if (is_string($validators)) {
                 $validators = explode('|', $validators);
             }
             foreach ($validators as $validator) {
-                if ($validator instanceof \framework\contracts\Validator) {
+                if (is_callable($validator)) {
+                    $result = $validator($data->$field ?? null);
+                    if (!empty($result)) {
+                        $errors[$field] = $result;
+                        break;
+                    }
+                } elseif ($validator instanceof \framework\contracts\Validator) {
                     if (!$validator->validate($data->$field ?? null)) {
                         $errors[$field] = $validator->message();
                         break;
                     }
-                } elseif (is_string($validator) && isset($this->registry[$validator])) {
-                    $validatorClass = $this->registry[$validator];
-                    $validatorInstance = new $validatorClass();
+                } elseif (is_string($validator)) {
+                    $validatorInstance = new $validator();
                     if (!$validatorInstance->validate($data->$field ?? null)) {
                         $errors[$field] = $validatorInstance->message;
                         break;

@@ -18,4 +18,19 @@ class ValidatorTest extends TestCase
             'email' => [Required::class, Email::class],
         ]));
     }
+
+    public function testAddValidator()
+    {
+        $app = createApp();
+
+        $app->validator->addValidator('custom', function ($value) {
+            return $value === 'custom' ? null : 'This value must equal "custom"';
+        });
+
+        $this->assertEmpty($app->validator->validate((object) [
+            'name' => 'custom',
+        ], [
+            'name' => 'custom',
+        ]));
+    }
 }
