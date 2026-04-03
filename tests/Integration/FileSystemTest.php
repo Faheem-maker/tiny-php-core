@@ -30,6 +30,23 @@ class FileSystemTest extends TestCase
         unlink($destination);
     }
 
+    public function testCreateDir()
+    {
+        $fileSystem = new FileSystem();
+
+        $source = __DIR__ . '/tmp/test.txt';
+        $destination = __DIR__ . '/tmp/path/test_moved.txt';
+
+        file_put_contents($source, 'test');
+
+        $fileSystem->move($source, $destination);
+
+        $this->assertFileExists($destination);
+        $this->assertFileDoesNotExist($source);
+
+        unlink($destination);
+    }
+
     public function testExists()
     {
         $fileSystem = new FileSystem();
@@ -49,7 +66,7 @@ class FileSystemTest extends TestCase
         $files = array_diff(scandir($dir), array('.', '..'));
 
         foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? delTree("$dir/$file") : unlink("$dir/$file");
+            (is_dir("$dir/$file")) ? $this->delTree("$dir/$file") : unlink("$dir/$file");
         }
 
         return rmdir($dir);
