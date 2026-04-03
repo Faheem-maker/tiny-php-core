@@ -9,6 +9,10 @@ class FileSystem extends Component implements FileSystemContract
 {
     public function move(string $source, string $destination): bool
     {
+        $directory = dirname($destination);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0777, true);
+        }
         return rename($source, $destination);
     }
 
