@@ -22,22 +22,9 @@ class Model
 
     public static function from($data): static
     {
-        $base = static::basename();
-        if (is_array($data) && isset($data[$base])) {
-            $data = $data[$base];
-        }
-        $meta = static::getMetaData();
         $cls = \get_called_class();
         $model = new $cls();
-        foreach ($meta as $key => $info) {
-            if (empty($data[$key]))
-                continue;
-            if ($info['type'] == 'DateTime') {
-                $model->{$key} = new \DateTime($data[$key]);
-            } else {
-                $model->{$key} = $data[$key] ?? null;
-            }
-        }
+        $model->load($data);
         return $model;
     }
 
@@ -63,6 +50,24 @@ class Model
         }
 
         return $metaData;
+    }
+
+    public function load($data)
+    {
+        $base = static::basename();
+        if (is_array($data) && isset($data[$base])) {
+            $data = $data[$base];
+        }
+        $meta = static::getMetaData();
+        foreach ($meta as $key => $info) {
+            if (empty($data[$key]))
+                continue;
+            if ($info['type'] == 'DateTime') {
+                $this->{$key} = new \DateTime($data[$key]);
+            } else {
+                $this->{$key} = $data[$key] ?? null;
+            }
+        }
     }
 
     /**
