@@ -33,15 +33,19 @@ class ActiveModel extends Model
 
     public function __set($name, $value)
     {
-        if (empty($this->relations[$name])) {
-            $method = 'get_' . $name;
-            $relation = $this->$method();
-            $this->relations[$name] = [
-                'records' => $value,
-                'relation' => $relation
-            ];
-        } else if ($this->relations[$name]) {
-            $this->relations[$name]['records'] = $value;
+        if (method_exists($this, 'get_' . $name)) {
+            if (empty($this->relations[$name])) {
+                $method = 'get_' . $name;
+                $relation = $this->$method();
+                $this->relations[$name] = [
+                    'records' => $value,
+                    'relation' => $relation
+                ];
+            } else if ($this->relations[$name]) {
+                $this->relations[$name]['records'] = $value;
+            }
+        } else {
+            $this->$name = $value;
         }
     }
 

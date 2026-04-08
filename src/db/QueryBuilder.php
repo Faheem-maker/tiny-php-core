@@ -44,6 +44,11 @@ class QueryBuilder extends Component
         return new DeleteCommand($this->conn, $table);
     }
 
+    public function execute(string $sql, array $params = [])
+    {
+        return $this->conn->execute($sql, $params);
+    }
+
     public function conn()
     {
         return $this->conn;
