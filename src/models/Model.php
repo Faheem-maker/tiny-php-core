@@ -30,11 +30,11 @@ class Model
         return end($cls);
     }
 
-    public static function from($data): static
+    public static function from(...$data): static
     {
         $cls = \get_called_class();
         $model = new $cls();
-        $model->load($data);
+        $model->fill(...$data);
         return $model;
     }
 
@@ -82,6 +82,14 @@ class Model
                 $this->{$key} = $data[$key] ?? null;
             }
         }
+    }
+
+    public function fill(array ...$data)
+    {
+        foreach ($data as $item) {
+            $this->load($item);
+        }
+        return $this;
     }
 
     /**
