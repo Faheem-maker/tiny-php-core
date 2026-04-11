@@ -5,6 +5,8 @@ namespace framework;
 use framework\contracts\ApplicationInterface;
 use framework\contracts\ComponentInterface;
 use framework\contracts\ExtensionInterface;
+use framework\models\Model;
+use framework\models\transformers\DateTimeTransformer;
 
 /**
  * Base application class
@@ -32,6 +34,8 @@ abstract class Application implements ApplicationInterface
 
     public function init()
     {
+        Model::registerTypeTransformer('DateTime', new DateTimeTransformer());
+
         foreach ($this->components as $component) {
             if ($component instanceof ComponentInterface) {
                 $component->init();
