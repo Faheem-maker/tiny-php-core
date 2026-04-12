@@ -6,6 +6,16 @@ class Model
 {
     public $errors = [];
 
+    /**
+     * @var \framework\models\interfaces\TypeTransformer[]
+     */
+    protected static $typeTransformers = [];
+
+    public static function registerTypeTransformer(string $type, \framework\models\interfaces\TypeTransformer $transformer)
+    {
+        static::$typeTransformers[$type] = $transformer;
+    }
+
     protected static function hasProperty($name)
     {
         $cls = \get_called_class();
@@ -20,11 +30,11 @@ class Model
         return end($cls);
     }
 
-    public static function from($data): static
+    public static function from(...$data): static
     {
         $cls = \get_called_class();
         $model = new $cls();
-        $model->load($data);
+        $model->fill(...$data);
         return $model;
     }
 
@@ -62,12 +72,24 @@ class Model
         foreach ($meta as $key => $info) {
             if (empty($data[$key]))
                 continue;
-            if ($info['type'] == 'DateTime') {
+
+            $type = $info['type'];
+            if (isset(static::$typeTransformers[$type])) {
+                $this->{$key} = static::$typeTransformers[$type]->transformFromDatabase($data[$key]);
+            } else if ($type == 'DateTime') {
                 $this->{$key} = new \DateTime($data[$key]);
             } else {
                 $this->{$key} = $data[$key] ?? null;
             }
         }
+    }
+
+    public function fill(array ...$data)
+    {
+        foreach ($data as $item) {
+            $this->load($item);
+        }
+        return $this;
     }
 
     /**

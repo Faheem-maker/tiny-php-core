@@ -115,11 +115,6 @@ class MySqlDriver extends BaseDriver
 
     public function execute(string $sql, array $params = []): QueryResult
     {
-        foreach ($params as $key => $value) {
-            if ($value instanceof \DateTime) {
-                $params[$key] = $value->format('Y-m-d H:i:s');
-            }
-        }
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
         return new MySqlResult($stmt);

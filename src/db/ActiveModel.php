@@ -123,7 +123,14 @@ class ActiveModel extends Model
 
         foreach ($meta as $prop => $info) {
             if ($info['initialized']($this)) {
-                $data[$prop] = $this->$prop;
+                $value = $this->$prop;
+                $type = $info['type'];
+
+                if (isset(static::$typeTransformers[$type])) {
+                    $data[$prop] = static::$typeTransformers[$type]->transformToDatabase($value);
+                } else {
+                    $data[$prop] = $value;
+                }
             }
         }
 
