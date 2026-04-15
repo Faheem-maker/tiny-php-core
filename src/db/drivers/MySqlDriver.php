@@ -42,6 +42,8 @@ class MySqlDriver extends BaseDriver
                 return $this->compileInsert($components);
             case 'delete':
                 return $this->compileDelete($components);
+            case 'createTable':
+                return $this->compileCreateTable($components);
             default:
                 throw new Exception("Unsupported query type: {$type}");
         }
@@ -111,6 +113,61 @@ class MySqlDriver extends BaseDriver
         }
 
         return $query;
+    }
+
+    protected function compileCreateTable(array $components): string
+    {
+        $table = $components['table'];
+        $columnSqls = [];
+
+        foreach ($components['columns'] as $col) {
+            $columnDef = "`{$col['name']}` " . $this->mapType($col['type'], $col['attributes']);
+
+            if (isset($col['nullable']) && $col['nullable'] === false) {
+                $columnDef .= " NOT NULL";
+            } else {
+                $columnDef .= " NULL";
+            }
+
+            if (isset($col['default']) && $col['default'] !== null) {
+                $columnDef .= " DEFAULT " . $this->quoteValue($col['default']);
+            }
+
+            $columnSqls[] = $columnDef;
+        }
+
+        $columns = implode(", ", $columnSqls);
+        return "CREATE TABLE `{$table}` ({$columns})";
+    }
+
+    protected function mapType(string $type, array $attributes): string
+    {
+        switch ($type) {
+            case 'number':
+                return "DECIMAL(10, 0)";
+            case 'integer':
+                return "INT";
+            case 'decimal':
+                $precision = $attributes['precision'] ?? 8;
+                $scale = $attributes['scale'] ?? 2;
+                return "DECIMAL({$precision}, {$scale})";
+            default:
+                return "VARCHAR(255)";
+        }
+    }
+
+    protected function quoteValue($value): string
+    {
+        if (is_string($value)) {
+            return "'" . addslashes($value) . "'";
+        }
+        if (is_bool($value)) {
+            return $value ? '1' : '0';
+        }
+        if ($value === null) {
+            return 'NULL';
+        }
+        return (string)$value;
     }
 
     public function execute(string $sql, array $params = []): QueryResult

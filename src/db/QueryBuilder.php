@@ -2,6 +2,7 @@
 
 namespace framework\db;
 
+use framework\db\commands\CreateTableCommand;
 use framework\db\commands\DeleteCommand;
 use framework\db\commands\InsertCommand;
 use framework\db\commands\SelectCommand;
@@ -26,6 +27,11 @@ class QueryBuilder extends Component
     public function select($cols = '*')
     {
         return new SelectCommand($this->conn, $cols);
+    }
+
+    public function createTable($table = null)
+    {
+        return new CreateTableCommand($this->conn, $table);
     }
 
     public function update($table, $cols)
