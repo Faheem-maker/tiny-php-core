@@ -64,6 +64,34 @@ class CreateTableCommand extends BaseCommand
     }
 
     /**
+     * Define a string column.
+     * 
+     * @param string $name
+     * @param int $length
+     * @return ColumnDefinition
+     */
+    public function string(string $name, int $length = 255): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'string');
+        $column->attribute('length', $length);
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
+     * Define a date column.
+     * 
+     * @param string $name
+     * @return ColumnDefinition
+     */
+    public function date(string $name): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'date');
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
      * Compiles the CREATE TABLE command into SQL.
      * 
      * @return string

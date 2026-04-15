@@ -151,6 +151,11 @@ class MySqlDriver extends BaseDriver
                 $precision = $attributes['precision'] ?? 8;
                 $scale = $attributes['scale'] ?? 2;
                 return "DECIMAL({$precision}, {$scale})";
+            case 'string':
+                $length = $attributes['length'] ?? 255;
+                return "VARCHAR({$length})";
+            case 'date':
+                return "DATE";
             default:
                 return "VARCHAR(255)";
         }
