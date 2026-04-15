@@ -21,6 +21,19 @@ class CreateTableCommand extends BaseCommand
     }
 
     /**
+     * Define an auto-incrementing primary key ID column.
+     * 
+     * @param string $name
+     * @return ColumnDefinition
+     */
+    public function id(string $name = 'id'): ColumnDefinition
+    {
+        return $this->integer($name)
+            ->attribute('primary', true)
+            ->attribute('autoIncrement', true);
+    }
+
+    /**
      * Define a numeric column.
      * 
      * @param string $name

@@ -44,6 +44,8 @@ class MySqlDriver extends BaseDriver
                 return $this->compileDelete($components);
             case 'createTable':
                 return $this->compileCreateTable($components);
+            case 'tableExists':
+                return $this->compileTableExists($components);
             default:
                 throw new Exception("Unsupported query type: {$type}");
         }
@@ -133,11 +135,28 @@ class MySqlDriver extends BaseDriver
                 $columnDef .= " DEFAULT " . $this->quoteValue($col['default']);
             }
 
+            if (isset($col['attributes']['autoIncrement']) && $col['attributes']['autoIncrement'] === true) {
+                $columnDef .= " AUTO_INCREMENT";
+            }
+
+            if (isset($col['attributes']['primary']) && $col['attributes']['primary'] === true) {
+                $columnDef .= " PRIMARY KEY";
+            }
+
+            if (isset($col['attributes']['unique']) && $col['attributes']['unique'] === true) {
+                $columnDef .= " UNIQUE";
+            }
+
             $columnSqls[] = $columnDef;
         }
 
         $columns = implode(", ", $columnSqls);
         return "CREATE TABLE `{$table}` ({$columns})";
+    }
+
+    protected function compileTableExists(array $components): string
+    {
+        return "SHOW TABLES LIKE '{$components['table']}'";
     }
 
     protected function mapType(string $type, array $attributes): string

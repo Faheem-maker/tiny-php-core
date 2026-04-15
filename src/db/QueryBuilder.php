@@ -6,6 +6,7 @@ use framework\db\commands\CreateTableCommand;
 use framework\db\commands\DeleteCommand;
 use framework\db\commands\InsertCommand;
 use framework\db\commands\SelectCommand;
+use framework\db\commands\TableExistsCommand;
 use framework\db\commands\UpdateCommand;
 use framework\db\drivers\BaseDriver;
 use framework\Component;
@@ -48,6 +49,12 @@ class QueryBuilder extends Component
     public function delete($table)
     {
         return new DeleteCommand($this->conn, $table);
+    }
+
+    public function isTable($table)
+    {
+        return (new TableExistsCommand($this->conn, $table))
+            ->execute();
     }
 
     public function execute(string $sql, array $params = [])

@@ -34,6 +34,11 @@ class ColumnDefinition
         return $this;
     }
 
+    public function unique(): self
+    {
+        return $this->attribute('unique', true);
+    }
+
     public function toArray(): array
     {
         return [
