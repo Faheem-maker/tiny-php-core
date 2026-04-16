@@ -4,6 +4,7 @@ namespace framework\db;
 
 use framework\db\commands\CreateTableCommand;
 use framework\db\commands\DeleteCommand;
+use framework\db\commands\DropTableCommand;
 use framework\db\commands\InsertCommand;
 use framework\db\commands\SelectCommand;
 use framework\db\commands\TableExistsCommand;
@@ -54,6 +55,12 @@ class QueryBuilder extends Component
     public function isTable($table)
     {
         return (new TableExistsCommand($this->conn, $table))
+            ->execute();
+    }
+
+    public function dropTable($table)
+    {
+        return (new DropTableCommand($this->conn, $table))
             ->execute();
     }
 

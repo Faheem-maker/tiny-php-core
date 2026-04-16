@@ -46,6 +46,8 @@ class MySqlDriver extends BaseDriver
                 return $this->compileCreateTable($components);
             case 'tableExists':
                 return $this->compileTableExists($components);
+            case 'dropTable':
+                return $this->compileDropTable($components);
             default:
                 throw new Exception("Unsupported query type: {$type}");
         }
@@ -157,6 +159,11 @@ class MySqlDriver extends BaseDriver
     protected function compileTableExists(array $components): string
     {
         return "SHOW TABLES LIKE '{$components['table']}'";
+    }
+
+    protected function compileDropTable(array $components): string
+    {
+        return "DROP TABLE `{$components['table']}`";
     }
 
     protected function mapType(string $type, array $attributes): string
