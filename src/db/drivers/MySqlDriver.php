@@ -180,8 +180,19 @@ class MySqlDriver extends BaseDriver
             case 'string':
                 $length = $attributes['length'] ?? 255;
                 return "VARCHAR({$length})";
+            case 'char':
+                $length = $attributes['length'] ?? 255;
+                return "CHAR({$length})";
             case 'date':
                 return "DATE";
+            case 'dateTime':
+                return "DATETIME";
+            case 'time':
+                return "TIME";
+            case 'timestamp':
+                return "TIMESTAMP";
+            case 'boolean':
+                return "BOOLEAN";
             default:
                 return "VARCHAR(255)";
         }

@@ -92,6 +92,21 @@ class CreateTableCommand extends BaseCommand
     }
 
     /**
+     * Define a char column.
+     * 
+     * @param string $name
+     * @param int $length
+     * @return ColumnDefinition
+     */
+    public function char(string $name, int $length = 255): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'char');
+        $column->attribute('length', $length);
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
      * Define a date column.
      * 
      * @param string $name
@@ -102,6 +117,97 @@ class CreateTableCommand extends BaseCommand
         $column = new ColumnDefinition($name, 'date');
         $this->columns[] = $column;
         return $column;
+    }
+
+    /**
+     * Define a boolean column.
+     * 
+     * @param string $name
+     * @return ColumnDefinition
+     */
+    public function boolean(string $name): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'boolean');
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
+     * Define a date-time column.
+     * 
+     * @param string $name
+     * @return ColumnDefinition
+     */
+    public function dateTime(string $name): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'dateTime');
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
+     * Define a time column.
+     * 
+     * @param string $name
+     * @return ColumnDefinition
+     */
+    public function time(string $name): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'time');
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
+     * Define a timestamp column.
+     * 
+     * @param string $name
+     * @return ColumnDefinition
+     */
+    public function timestamp(string $name): ColumnDefinition
+    {
+        $column = new ColumnDefinition($name, 'timestamp');
+        $this->columns[] = $column;
+        return $column;
+    }
+
+    /**
+     * Define created_at and updated_at timestamp columns.
+     * 
+     * @return void
+     */
+    public function timestamps(): void
+    {
+        $this->timestamp('created_at')->nullable();
+        $this->timestamp('updated_at')->nullable();
+    }
+
+    /**
+     * Define a foreign ID column for a given model.
+     * 
+     * @param string $model
+     * @param string|null $column
+     * @return ColumnDefinition
+     */
+    public function foreignIdFor(string $model, ?string $column = null): ColumnDefinition
+    {
+        if (empty($column)) {
+            $column = $model::table() . '_id';
+        }
+
+        return $this->integer($column);
+    }
+
+    /**
+     * Alias for foreignIdFor.
+     * 
+     * @param string $model
+     * @param string|null $column
+     * @return ColumnDefinition
+     */
+    public function foreignKeyFor(string $model, ?string $column = null): ColumnDefinition
+    {
+        return $this->foreignIdFor($model, $column);
     }
 
     /**
