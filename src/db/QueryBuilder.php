@@ -2,9 +2,13 @@
 
 namespace framework\db;
 
+use framework\db\commands\CreateTableCommand;
 use framework\db\commands\DeleteCommand;
+use framework\db\commands\DropTableCommand;
 use framework\db\commands\InsertCommand;
 use framework\db\commands\SelectCommand;
+use framework\db\commands\TableExistsCommand;
+use framework\db\commands\TransactionCommand;
 use framework\db\commands\UpdateCommand;
 use framework\db\drivers\BaseDriver;
 use framework\Component;
@@ -28,6 +32,11 @@ class QueryBuilder extends Component
         return new SelectCommand($this->conn, $cols);
     }
 
+    public function createTable($table = null)
+    {
+        return new CreateTableCommand($this->conn, $table);
+    }
+
     public function update($table, $cols)
     {
         return new UpdateCommand($this->conn, $table, $cols);
@@ -42,6 +51,36 @@ class QueryBuilder extends Component
     public function delete($table)
     {
         return new DeleteCommand($this->conn, $table);
+    }
+
+    public function isTable($table)
+    {
+        return (new TableExistsCommand($this->conn, $table))
+            ->execute();
+    }
+
+    public function dropTable($table)
+    {
+        return (new DropTableCommand($this->conn, $table))
+            ->execute();
+    }
+
+    public function beginTransaction()
+    {
+        return (new TransactionCommand($this->conn, 'begin'))
+            ->execute();
+    }
+
+    public function commit()
+    {
+        return (new TransactionCommand($this->conn, 'commit'))
+            ->execute();
+    }
+
+    public function rollback()
+    {
+        return (new TransactionCommand($this->conn, 'rollback'))
+            ->execute();
     }
 
     public function execute(string $sql, array $params = [])

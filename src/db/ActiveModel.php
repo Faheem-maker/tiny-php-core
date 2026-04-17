@@ -28,7 +28,7 @@ class ActiveModel extends Model
             return $this->relations[$name]['records'];
         }
 
-        return $tmp = null;
+        throw new \Exception("Property {$name} not found in model " . static::class);
     }
 
     public function __set($name, $value)

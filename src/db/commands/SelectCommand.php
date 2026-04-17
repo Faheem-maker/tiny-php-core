@@ -12,6 +12,7 @@ class SelectCommand extends BaseCommand
     protected array $cols;
     protected array $params = [];
     public $transform = null;
+    protected array $orders = [];
 
     use HasTable;
     use HasWhere;
@@ -35,7 +36,18 @@ class SelectCommand extends BaseCommand
             'condition' => $this->where,
             'where' => $this->where,
             'joins' => $this->joins,
+            'orders' => $this->orders,
         ]);
+    }
+
+    public function orderBy(string $column, string $direction = 'ASC'): self
+    {
+        $this->orders[] = [
+            'column' => $column,
+            'direction' => strtoupper($direction)
+        ];
+
+        return $this;
     }
 
     protected function transform($data) {
