@@ -64,6 +64,10 @@ class MySqlDriver extends BaseDriver
 
         $query = $this->compileWhere($query, $components['where']);
 
+        if (!empty($components['orders'])) {
+            $query .= $this->compileOrderBy($components['orders']);
+        }
+
         return $query;
     }
     
@@ -117,6 +121,16 @@ class MySqlDriver extends BaseDriver
         }
 
         return $query;
+    }
+
+    protected function compileOrderBy(array $orders): string
+    {
+        $orderSql = ' ORDER BY ';
+        $parts = [];
+        foreach ($orders as $order) {
+            $parts[] = "{$order['column']} {$order['direction']}";
+        }
+        return $orderSql . implode(', ', $parts);
     }
 
     protected function compileCreateTable(array $components): string
