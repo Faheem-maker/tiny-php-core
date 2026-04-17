@@ -8,6 +8,7 @@ use framework\db\commands\DropTableCommand;
 use framework\db\commands\InsertCommand;
 use framework\db\commands\SelectCommand;
 use framework\db\commands\TableExistsCommand;
+use framework\db\commands\TransactionCommand;
 use framework\db\commands\UpdateCommand;
 use framework\db\drivers\BaseDriver;
 use framework\Component;
@@ -61,6 +62,24 @@ class QueryBuilder extends Component
     public function dropTable($table)
     {
         return (new DropTableCommand($this->conn, $table))
+            ->execute();
+    }
+
+    public function beginTransaction()
+    {
+        return (new TransactionCommand($this->conn, 'begin'))
+            ->execute();
+    }
+
+    public function commit()
+    {
+        return (new TransactionCommand($this->conn, 'commit'))
+            ->execute();
+    }
+
+    public function rollback()
+    {
+        return (new TransactionCommand($this->conn, 'rollback'))
             ->execute();
     }
 

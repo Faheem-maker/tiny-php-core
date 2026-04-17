@@ -48,6 +48,8 @@ class MySqlDriver extends BaseDriver
                 return $this->compileTableExists($components);
             case 'dropTable':
                 return $this->compileDropTable($components);
+            case 'transaction':
+                return $this->compileTransaction($components);
             default:
                 throw new Exception("Unsupported query type: {$type}");
         }
@@ -178,6 +180,20 @@ class MySqlDriver extends BaseDriver
     protected function compileDropTable(array $components): string
     {
         return "DROP TABLE `{$components['table']}`";
+    }
+
+    protected function compileTransaction(array $components): string
+    {
+        switch ($components['action']) {
+            case 'begin':
+                return "START TRANSACTION";
+            case 'commit':
+                return "COMMIT";
+            case 'rollback':
+                return "ROLLBACK";
+            default:
+                throw new Exception("Unsupported transaction action: {$components['action']}");
+        }
     }
 
     protected function mapType(string $type, array $attributes): string
