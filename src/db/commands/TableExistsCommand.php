@@ -20,6 +20,6 @@ class TableExistsCommand extends BaseCommand
             'table' => $this->table
         ]);
 
-        return $this->conn->execute($sql)->rowCount() > 0;
+        return (bool) $this->conn->execute($sql)->fetch();
     }
 }
