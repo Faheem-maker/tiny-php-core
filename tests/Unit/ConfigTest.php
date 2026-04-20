@@ -45,4 +45,23 @@ class ConfigTest extends TestCase
 
         $this->assertEquals('test', $app->config->test);
     }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $runtimePath = __DIR__ . '/../runtime';
+        if (is_dir($runtimePath)) {
+            $this->removeDirectory($runtimePath);
+        }
+    }
+
+    private function removeDirectory(string $path): void
+    {
+        $files = array_diff(scandir($path), ['.', '..']);
+        foreach ($files as $file) {
+            $fullPath = $path . DIRECTORY_SEPARATOR . $file;
+            is_dir($fullPath) ? $this->removeDirectory($fullPath) : unlink($fullPath);
+        }
+        rmdir($path);
+    }
 }
