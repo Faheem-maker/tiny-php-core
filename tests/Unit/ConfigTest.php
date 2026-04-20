@@ -44,6 +44,43 @@ class ConfigTest extends TestCase
         $app->config->test = 'test';
 
         $this->assertEquals('test', $app->config->test);
+        $this->assertEquals('default', $app->config->get('invalid-key', 'default'));
+    }
+
+    public function testHas()
+    {
+        $app = createApp();
+
+        $this->assertFalse($app->config->has('test'));
+        $app->config->test = 'test';
+        $this->assertTrue($app->config->has('test'));
+        $this->assertFalse($app->config->has('invalid-key'));
+    }
+
+    public function testAll()
+    {
+        $app = createApp();
+
+        $this->assertIsArray($app->config->all());
+    }
+
+    public function testLoad()
+    {
+        $app = createApp();
+
+        $app->config->load([
+            'key' => 'value',
+            'paths' => 'string',
+        ]);
+
+        $this->assertIsArray($app->config->paths);
+        $this->assertEquals('value', $app->config->key);
+
+        $app->config->load([
+            'paths' => 'string',
+        ], true);
+
+        $this->assertEquals('string', $app->config->paths);
     }
 
     protected function tearDown(): void

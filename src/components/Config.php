@@ -45,4 +45,19 @@ class Config extends Component
     {
         return $this->container->get($key, $default);
     }
+
+    public function has(string $key): bool
+    {
+        return $this->container->has($key);
+    }
+
+    public function all(): array
+    {
+        return $this->container->all();
+    }
+
+    public function load(array $config, bool $override = false): void
+    {
+        $this->container->load($config, $override);
+    }
 }
