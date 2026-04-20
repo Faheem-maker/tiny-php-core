@@ -20,6 +20,8 @@ abstract class Application implements ApplicationInterface
 {
     protected static ?Application $instance = null;
 
+    protected array $initialized = [];
+
     /**
      * Container for registered components
      * @var array<string, ComponentInterface|string|callable>
@@ -36,9 +38,10 @@ abstract class Application implements ApplicationInterface
     {
         Model::registerTypeTransformer('DateTime', new DateTimeTransformer());
 
-        foreach ($this->components as $component) {
+        foreach ($this->components as $key => $component) {
             if ($component instanceof ComponentInterface) {
                 $component->init();
+                $this->initialized[$key] = true;
             }
         }
 
@@ -85,6 +88,9 @@ abstract class Application implements ApplicationInterface
         } else if (is_callable($com)) {
             $this->components[$name] = $com($this);
             $this->components[$name]->init();
+        } else if ($this->components[$name] instanceof ComponentInterface && !isset($this->initialized[$name])) {
+            $this->components[$name]->init();
+            $this->initialized[$name] = true;
         }
 
         return $this->components[$name] ?? null;
