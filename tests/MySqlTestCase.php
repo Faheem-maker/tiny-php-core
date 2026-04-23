@@ -58,6 +58,15 @@ abstract class MySqlTestCase extends TestCase
         $sql = str_replace('where 1 = 1 and', 'where', $sql);
         $sql = str_replace('where 1 = 1', 'where', $sql);
 
+        // Remove trailing spaces after commas
+        $sql = str_replace(', ', ',', $sql);
+
+        // Remove spaces after opening brackets and before closing brackets
+        $sql = str_replace('( ', '(', $sql);
+        $sql = str_replace(' )', ')', $sql);
+
         return trim($sql);
+
+
     }
 }
