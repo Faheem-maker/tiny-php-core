@@ -215,7 +215,7 @@ class CreateTableCommand extends BaseCommand
      * 
      * @return string
      */
-    public function compile(): string
+    public function sql(): string
     {
         $columnData = array_map(fn(ColumnDefinition $col) => $col->toArray(), $this->columns);
 
@@ -230,9 +230,9 @@ class CreateTableCommand extends BaseCommand
      * 
      * @return \framework\db\QueryResult
      */
-    public function execute()
+    public function execute(): \framework\db\QueryResult
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
         return $this->conn->execute($sql);
     }
 }

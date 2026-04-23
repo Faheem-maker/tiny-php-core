@@ -28,7 +28,7 @@ class SelectCommand extends BaseCommand
         parent::__construct($driver);
     }
 
-    public function compile()
+    public function sql(): string
     {
         return $this->conn->compile('select', [
             'table' => $this->table,
@@ -50,7 +50,8 @@ class SelectCommand extends BaseCommand
         return $this;
     }
 
-    protected function transform($data) {
+    protected function transform($data)
+    {
         if (is_callable($this->transform)) {
             return array_map($this->transform, $data);
         }
@@ -61,20 +62,20 @@ class SelectCommand extends BaseCommand
 
     public function all()
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
 
         return $this->transform($this->conn->execute($sql, $this->params)->fetchAll());
     }
 
     public function first()
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
         return $this->transform($this->conn->execute($sql, $this->params)->fetch());
     }
 
     public function count()
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
         return $this->conn->execute($sql, $this->params)->rowCount();
     }
 }

@@ -9,4 +9,6 @@ abstract class BaseCommand {
     public function __construct($conn) {
         $this->conn = $conn;
     }
-}
+
+    abstract public function sql(): string;
+}
