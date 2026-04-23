@@ -42,10 +42,10 @@ class QueryBuilder extends Component
         return new UpdateCommand($this->conn, $table, $cols);
     }
 
-    public function insert($table, $cols)
+    public function insert($table, $cols, $execute = true)
     {
-        return (new InsertCommand($this->conn, $table, $cols))
-            ->execute();
+        $command = new InsertCommand($this->conn, $table, $cols);
+        return $execute ? $command->execute() : $command;
     }
 
     public function delete($table)
@@ -65,22 +65,22 @@ class QueryBuilder extends Component
             ->execute();
     }
 
-    public function beginTransaction()
+    public function beginTransaction($execute = true)
     {
-        return (new TransactionCommand($this->conn, 'begin'))
-            ->execute();
+        $command = new TransactionCommand($this->conn, 'begin');
+        return $execute ? $command->execute() : $command;
     }
 
-    public function commit()
+    public function commit($execute = true)
     {
-        return (new TransactionCommand($this->conn, 'commit'))
-            ->execute();
+        $command = new TransactionCommand($this->conn, 'commit');
+        return $execute ? $command->execute() : $command;
     }
 
-    public function rollback()
+    public function rollback($execute = true)
     {
-        return (new TransactionCommand($this->conn, 'rollback'))
-            ->execute();
+        $command = new TransactionCommand($this->conn, 'rollback');
+        return $execute ? $command->execute() : $command;
     }
 
     public function execute(string $sql, array $params = [])
