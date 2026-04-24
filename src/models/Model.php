@@ -142,4 +142,18 @@ class Model
         }
         return ucfirst($property);
     }
+
+    /**
+     * Safe getter for properties
+     * Returns null if property is not initialized
+     * 
+     * @param mixed $name
+     */
+    public function safe_get($name)
+    {
+        $refProp = new \ReflectionProperty($this, $name);
+        return $refProp->isInitialized($this)
+            ? $refProp->getValue($this)
+            : null;
+    }
 }
