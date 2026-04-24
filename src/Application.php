@@ -85,9 +85,11 @@ abstract class Application implements ApplicationInterface
             $this->components[$name] = $this->di->make($com);
 
             $this->components[$name]->init();
+            $this->initialized[$name] = true;
         } else if (is_callable($com)) {
             $this->components[$name] = $com($this);
             $this->components[$name]->init();
+            $this->initialized[$name] = true;
         } else if ($this->components[$name] instanceof ComponentInterface && !isset($this->initialized[$name])) {
             $this->components[$name]->init();
             $this->initialized[$name] = true;
