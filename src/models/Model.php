@@ -70,11 +70,15 @@ class Model
         }
         $meta = static::getMetaData();
         foreach ($meta as $key => $info) {
-            if (empty($data[$key]))
+            if (!isset($data[$key]))
                 continue;
 
             $type = $info['type'];
             if (isset(static::$typeTransformers[$type])) {
+                // Let the transformer decide if this value should be skipped
+                if (static::$typeTransformers[$type]->isEmpty($data[$key])) {
+                    continue;
+                }
                 $this->{$key} = static::$typeTransformers[$type]->transformFromDatabase($data[$key]);
             } else if ($type == 'DateTime') {
                 $this->{$key} = new \DateTime($data[$key]);

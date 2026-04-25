@@ -8,7 +8,8 @@ class DateTimeTransformer implements TypeTransformer
 {
     public function transformFromDatabase($value)
     {
-        if (empty($value)) return null;
+        if (empty($value))
+            return null;
         return new \DateTime($value);
     }
 
@@ -18,5 +19,10 @@ class DateTimeTransformer implements TypeTransformer
             return $value->format('Y-m-d H:i:s');
         }
         return $value;
+    }
+
+    public function isEmpty($value): bool
+    {
+        return $value == new \DateTime('0000-00-00 00:00:00');
     }
 }
