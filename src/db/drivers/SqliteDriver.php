@@ -41,9 +41,16 @@ class SqliteDriver extends BaseDriver
                 return $this->compileInsert($components);
             case 'delete':
                 return $this->compileDelete($components);
+            case 'tableExists':
+                return $this->compileTableExists($components);
             default:
                 throw new Exception("Unsupported query type: {$type}");
         }
+    }
+
+    protected function compileTableExists(array $components): string
+    {
+        return "SELECT name FROM sqlite_master WHERE type='table' AND name='{$components['table']}'";
     }
 
     protected function compileSelect(array $components): string
@@ -133,6 +140,6 @@ class SqliteDriver extends BaseDriver
 
     public function lastInsertId(): int
     {
-        return (int)$this->conn->lastInsertId();
+        return (int) $this->conn->lastInsertId();
     }
 }

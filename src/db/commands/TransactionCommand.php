@@ -12,11 +12,16 @@ class TransactionCommand extends BaseCommand
         $this->action = $action;
     }
 
-    public function execute()
+    public function sql(): string
     {
-        $sql = $this->conn->compile('transaction', [
+        return $this->conn->compile('transaction', [
             'action' => $this->action
         ]);
+    }
+
+    public function execute()
+    {
+        $sql = $this->sql();
 
         return $this->conn->execute($sql);
     }

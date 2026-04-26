@@ -4,7 +4,8 @@ namespace framework\db\commands;
 
 use framework\db\drivers\BaseDriver;
 
-class InsertCommand extends BaseCommand {
+class InsertCommand extends BaseCommand
+{
     protected $cols;
     protected $table;
     protected $params = [];
@@ -16,7 +17,7 @@ class InsertCommand extends BaseCommand {
         parent::__construct($driver);
     }
 
-    public function compile()
+    public function sql(): string
     {
         return $this->conn->compile('insert', [
             'table' => $this->table,
@@ -26,7 +27,7 @@ class InsertCommand extends BaseCommand {
 
     public function execute()
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
 
         // Add parameters
         foreach ($this->cols as $key => $col) {

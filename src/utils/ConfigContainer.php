@@ -84,9 +84,14 @@ class ConfigContainer
      * Load configuration from an array.
      *
      * @param array $config The configuration array to load.
+     * @param bool $override Whether to override existing config
      */
-    public function load(array $config): void
+    public function load(array $config, bool $override = false): void
     {
-        $this->config = array_merge($this->config, $config);
+        if ($override) {
+            $this->config = array_merge($this->config, $config);
+        } else {
+            $this->config = array_merge($config, $this->config);
+        }
     }
 }

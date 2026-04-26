@@ -6,7 +6,8 @@ use framework\db\drivers\BaseDriver;
 use framework\db\traits\HasTable;
 use framework\db\traits\HasWhere;
 
-class DeleteCommand extends BaseCommand {
+class DeleteCommand extends BaseCommand
+{
     protected $table;
     protected $params = [];
 
@@ -19,7 +20,7 @@ class DeleteCommand extends BaseCommand {
         parent::__construct($driver);
     }
 
-    public function compile()
+    public function sql(): string
     {
         return $this->conn->compile('delete', [
             'table' => $this->table,
@@ -27,9 +28,9 @@ class DeleteCommand extends BaseCommand {
         ]);
     }
 
-    public function execute()
+    public function execute(): \framework\db\QueryResult
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
 
         return $this->conn->execute($sql, $this->params);
     }

@@ -23,7 +23,18 @@ class MySqlDriver extends BaseDriver
 
     public function connect(): void
     {
-        $this->conn = new \PDO($this->getDsn(), $this->config['username'], $this->config['password']);
+        // The connection is lazy loaded instead
+    }
+
+    protected function conn()
+    {
+        if (is_null($this->conn)) {
+            $this->conn = new \PDO($this->getDsn(), $this->config['username'], $this->config['password']);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        }
+
+        return $this->conn;
     }
 
     public function disconnect(): void
@@ -72,7 +83,7 @@ class MySqlDriver extends BaseDriver
 
         return $query;
     }
-    
+
     protected function compileDelete(array $components): string
     {
         $query = "DELETE FROM {$components['table']}";
@@ -82,7 +93,8 @@ class MySqlDriver extends BaseDriver
         return $query;
     }
 
-    protected function compileInsert(array $components) {
+    protected function compileInsert(array $components)
+    {
         $cols = implode(', ', array_keys($components['columns']));
         $placeholders = implode(', ', array_map(fn($key) => ":$key", array_keys($components['columns'])));
 
@@ -239,12 +251,12 @@ class MySqlDriver extends BaseDriver
         if ($value === null) {
             return 'NULL';
         }
-        return (string)$value;
+        return (string) $value;
     }
 
     public function execute(string $sql, array $params = []): QueryResult
     {
-        $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn()->prepare($sql);
         $stmt->execute($params);
         return new MySqlResult($stmt);
     }

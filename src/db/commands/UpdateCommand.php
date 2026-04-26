@@ -22,7 +22,7 @@ class UpdateCommand extends BaseCommand
         parent::__construct($driver);
     }
 
-    public function compile()
+    public function sql(): string
     {
         return $this->conn->compile('update', [
             'table' => $this->table,
@@ -31,9 +31,9 @@ class UpdateCommand extends BaseCommand
         ]);
     }
 
-    public function execute()
+    public function execute(): \framework\db\QueryResult
     {
-        $sql = $this->compile();
+        $sql = $this->sql();
 
         // Add parameters
         foreach ($this->cols as $key => $col) {

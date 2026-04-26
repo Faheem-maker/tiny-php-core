@@ -14,12 +14,17 @@ class TableExistsCommand extends BaseCommand
         $this->table = $table;
     }
 
-    public function execute(): bool
+    public function sql(): string
     {
-        $sql = $this->conn->compile('tableExists', [
+        return $this->conn->compile('tableExists', [
             'table' => $this->table
         ]);
+    }
 
-        return $this->conn->execute($sql)->rowCount() > 0;
+    public function execute(): bool
+    {
+        $sql = $this->sql();
+
+        return (bool) $this->conn->execute($sql)->fetch();
     }
 }
